@@ -19,7 +19,10 @@ const config: Config = {
         correctAnswer: '#3E9FFF',
         fontColor: '#8B8EAB',
         congratsColor: '#FFECC8'
-      }
+      },
+      backgroundImage: {
+         'bg-image': "url('/img/bg.jpg')",
+        }
     },
   },
   plugins: [],

@@ -2,7 +2,7 @@ import "./globals.css";
 export default function Home() {
   return (
     <main className="flex min-w-full min-h-full h-screen items-center justify-center bg-graybg ">
-      <div className="flex items-center justify-center w-[1280px] h-[720px] bg-purple1">
+      <div className="flex items-center justify-center w-[1280px] h-[720px] bg-bg-image">
         <div className="flex items-center justify-around flex-col w-2/3 h-2/3 bg-purple2 rounded-xl">
           <div className="text-fontColor">Country Quiz</div>
           <div>
