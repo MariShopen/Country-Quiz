@@ -14,6 +14,7 @@ const shuffle = (array: any[]) => {
 export default function Home() {
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [countries, setCountries] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
   const handleQuestionClick = (question: string) => {
@@ -32,6 +33,8 @@ export default function Home() {
         setCountries(shuffledData);
       } catch (error: any) {
         setError(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -47,15 +50,39 @@ export default function Home() {
           <div className="text-fontColor font-bold">Country Quiz</div>
           <div className="flex flex-col items-center">
             <div className="question-buttons flex flex-row justify-center">
-              {countries10.map((country, index) => (
-                <button
-                  className="w-12 h-12 rounded-full text-graybg bg-gradient-to-r from-gradientColor1 to-gradientColor2 m-4 text-xl font-semibold"
-                  key={index}
-                  onClick={() => handleQuestionClick(country.capital)}
-                >
-                  {index + 1}
-                </button>
-              ))}
+              {/* {isLoading ? (
+                <button>lkjgkdnkjdfb</button>
+              ) : (
+                countries10.map((country, index) => (
+                  <button
+                    className="w-12 h-12 rounded-full text-graybg bg-gradient-to-r from-gradientColor1 to-gradientColor2 m-4 text-xl font-semibold"
+                    key={index}
+                    onClick={() => handleQuestionClick(country.capital)}
+                  >
+                    {index + 1}
+                  </button>
+                ))
+              )} */}
+              {Array.from({ length: 10 })
+                .fill(undefined)
+                .map((_, i) => (
+                  <>
+                    {isLoading ? (
+                      <button className=" disabled:opacity-50 w-12 h-12 rounded-full text-fontColor bg-purple3 m-4 text-xl font-semibold">
+                        {i + 1}
+                      </button>
+                    ) : (
+                      <button
+                        className="w-12 h-12 rounded-full text-graybg bg-purple3 hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2 m-4 text-xl font-semibold"
+                        onClick={() =>
+                          handleQuestionClick(countries10[i].capital)
+                        }
+                      >
+                        {i + 1}
+                      </button>
+                    )}
+                  </>
+                ))}
             </div>
             <div className="selected-question">
               {selectedQuestion && (
