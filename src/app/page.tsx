@@ -60,20 +60,18 @@ export default function Home() {
           throw new Error("Failed to fetch data");
         }
         const jsonData = await response.json();
-        // const shuffledData = shuffle(jsonData);
-        // const shuffleAnswers = shuffle(jsonData);
-        // setAnswers(shuffleAnswers);
-        // setCountries(shuffledData);
-        const capitals = jsonData.map((country: any) => country.capital);
-        const shuffledCapitals = shuffle(capitals);
+        const countryNames = jsonData.map(
+          (country: any) => country.name.common
+        );
+        // const shuffledCapitals = shuffle(capitals);
 
         const selectedquestions = shuffle(jsonData);
         const generatedQuizQuestions = selectedquestions
           .slice(0, 10)
           .map((country: any) => {
-            const correctAnswer = country.capital;
+            const correctAnswer = country.name.common;
             const incorrectAnswers = generateIncorrectAnswers(
-              shuffledCapitals,
+              countryNames,
               correctAnswer
             );
             const allAnswers = shuffle([correctAnswer, ...incorrectAnswers]);
@@ -103,8 +101,8 @@ export default function Home() {
     <main className="flex min-w-full min-h-full h-screen items-center justify-center bg-graybg ">
       <div className="flex items-center justify-center w-[1280px] h-[720px] bg-bg-image">
         <div className="flex items-center justify-around flex-col w-2/3 h-2/3 bg-purple2 rounded-xl">
-          <div className="text-fontColor font-bold">Country Quiz</div>
           <div className="flex flex-col items-center">
+            <div className="text-fontColor font-bold">Country Quiz</div>
             <div className="question-buttons flex flex-row justify-center">
               {/* //кнопки рисуются disabled, пока вопросы не загрузились */}
               {Array.from({ length: 10 })
@@ -112,12 +110,12 @@ export default function Home() {
                 .map((_, i) => (
                   <>
                     {isLoading ? (
-                      <button className=" disabled:opacity-50 w-12 h-12 rounded-full text-fontColor bg-purple3 m-4 text-xl font-semibold">
+                      <button className=" disabled:opacity-50 w-12 h-12 rounded-full text-fontColor bg-purple3 m-2 text-xl font-semibold">
                         {i + 1}
                       </button>
                     ) : (
                       <button
-                        className="w-12 h-12 rounded-full text-graybg bg-purple3 hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2 m-4 text-xl font-semibold"
+                        className="w-12 h-12 rounded-full text-graybg bg-purple3 hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2 m-2 text-xl font-semibold"
                         onClick={() => handleQuestionClick(quizQuestions[i])}
                       >
                         {i + 1}
@@ -126,29 +124,25 @@ export default function Home() {
                   </>
                 ))}
             </div>
-            <div className="selected-question">
-              {selectedQuestion && (
-                <div className="text-graybg text-2xl font-semibold">
-                  {selectedQuestion.question}
-                </div>
-              )}
-            </div>
           </div>
-          <div className="text-graybg flex flex-col">
-            {/* {selectedCapital &&
-              shuffle(
-                answers30.concat(
-                  countries.filter(
-                    (country) => country.capital === selectedCapital
-                  )
-                )
-              ).map((country) => (
+          <div className="selected-question mt-4">
+            {/* //вопросы открываются по клику */}
+            {selectedQuestion && (
+              <div className="text-graybg text-2xl font-semibold">
+                {selectedQuestion.question}
+              </div>
+            )}
+          </div>
+          <div className="answers w-2/3 h-1/2 text-graybg flex flex-wrap items-center justify-center content-center ">
+            {/* //варианты ответов */}
+            {selectedQuestion &&
+              selectedQuestion.options.all.map((country) => (
                 <>
-                  <button className="text-graybg text-2xl font-semibold">
-                    {country.name.common}
+                  <button className="text-graybg font-semibold w-60 h-16 bg-purple3 m-3 text-xl rounded-xl">
+                    {country}
                   </button>
                 </>
-              ))} */}
+              ))}
           </div>
         </div>
       </div>
