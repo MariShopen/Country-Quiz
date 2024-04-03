@@ -49,13 +49,15 @@ export default function Home() {
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
     undefined
   );
+  const [answerDone, setAnswerDone] = useState<boolean>(false);
 
   const handleQuestionClick = (question: any) => {
     setQuestion(question);
   };
 
-  const handleExternalClick = (country: string) => () => {
+  const handleAnswerClick = (country: string) => () => {
     setSelectedCountry(country);
+    setAnswerDone(true);
   };
 
   useEffect(() => {
@@ -146,14 +148,12 @@ export default function Home() {
                 <>
                   <AnswerButton
                     className="button"
-                    onClick={handleExternalClick(country)}
+                    onClick={handleAnswerClick(country)}
                     isClicked={selectedCountry === country}
+                    disabled={answerDone}
                   >
                     {country}
                   </AnswerButton>
-                  {/* <button className="hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2 text-graybg font-semibold w-60 h-16 bg-purple3 m-3 text-xl rounded-xl">
-                    {country}
-                  </button> */}
                 </>
               ))}
           </div>
