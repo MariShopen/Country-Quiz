@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "./globals.css";
+import AnswerButton from "./components/answerButton";
 
 type Options = {
   correct: any;
@@ -42,14 +43,19 @@ const generateIncorrectAnswers = (
 
 export default function Home() {
   const [selectedQuestion, setQuestion] = useState<Question | null>(null);
-  // const [answers, setAnswers] = useState<any[]>([]);
-  // const [countries, setCountries] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
+    undefined
+  );
 
   const handleQuestionClick = (question: any) => {
     setQuestion(question);
+  };
+
+  const handleExternalClick = (country: string) => () => {
+    setSelectedCountry(country);
   };
 
   useEffect(() => {
@@ -138,9 +144,16 @@ export default function Home() {
             {selectedQuestion &&
               selectedQuestion.options.all.map((country) => (
                 <>
-                  <button className="text-graybg font-semibold w-60 h-16 bg-purple3 m-3 text-xl rounded-xl">
+                  <AnswerButton
+                    className="button"
+                    onClick={handleExternalClick(country)}
+                    isClicked={selectedCountry === country}
+                  >
                     {country}
-                  </button>
+                  </AnswerButton>
+                  {/* <button className="hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2 text-graybg font-semibold w-60 h-16 bg-purple3 m-3 text-xl rounded-xl">
+                    {country}
+                  </button> */}
                 </>
               ))}
           </div>
