@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AnswerButton from "./app/components/answerButton";
+import AnswerButton from "./components/answerButton";
 
 type Options = {
   correct: any;
@@ -27,14 +27,16 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   };
 
   return (
-    <>
-      <div className="selected-question mt-4">
+    <div className="selected-question-with-answers flex flex-col items-center justify-center h-3/4">
+      <div className="selected-question">
         {/* //вопросы открываются по клику */}
         {question && (
-          <div className="text-graybg text-2xl font-semibold">{question}</div>
+          <div className="text-graybg text-2xl font-semibold mb-10">
+            {question}
+          </div>
         )}
       </div>
-      <div className="answers w-2/3 h-1/2 text-graybg flex flex-wrap items-center justify-center content-center ">
+      <div className="answers w-2/3 h-1/2 text-graybg flex flex-wrap items-center justify-center content-center mb-10 ">
         {/* //варианты ответов */}
         {question &&
           options.all.map((country) => (
@@ -45,11 +47,11 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
               isClicked={selectedCountry === country}
               disabled={answerDone}
             >
-              {answerDone ? "1" : "0"} {country}
+              {country}
             </AnswerButton>
           ))}
       </div>
-    </>
+    </div>
   );
 };
 

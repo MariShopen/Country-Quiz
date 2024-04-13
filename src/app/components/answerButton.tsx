@@ -1,4 +1,4 @@
-import React, { ComponentProps, useState } from "react";
+import React, { ComponentProps } from "react";
 
 export type ButtonProps = ComponentProps<"button"> & {
   isClicked?: boolean;

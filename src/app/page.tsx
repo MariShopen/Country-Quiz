@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "./globals.css";
-import AnswerButton from "./components/answerButton";
-import QuestionComponent from "@/oneQuestion";
+import QuestionComponent from "./oneQuestion";
 
 type Options = {
   correct: any;
@@ -111,7 +110,7 @@ export default function Home() {
       <div className="flex items-center justify-center w-[1280px] h-[720px] bg-bg-image">
         <div className="flex items-center justify-around flex-col w-2/3 h-2/3 bg-purple2 rounded-xl">
           <div className="flex flex-col items-center">
-            <div className="text-fontColor font-bold">Country Quiz</div>
+            <div className="text-fontColor font-bold mt-10">Country Quiz</div>
             <div className="question-buttons flex flex-row justify-center">
               {/* //кнопки рисуются disabled, пока вопросы не загрузились */}
               {Array.from({ length: 10 })
@@ -134,38 +133,15 @@ export default function Home() {
                 ))}
             </div>
           </div>
-          {selectedQuestion && (
+          {selectedQuestion ? (
             <QuestionComponent
               key={selectedQuestion.question}
               question={selectedQuestion.question}
               options={selectedQuestion.options}
             />
+          ) : (
+            <div className="h-3/4"></div>
           )}
-
-          {/* <div className="selected-question mt-4">
-            {/* //вопросы открываются по клику 
-            {selectedQuestion && (
-              <div className="text-graybg text-2xl font-semibold">
-                {selectedQuestion.question}
-              </div>
-            )}
-          </div>
-          <div className="answers w-2/3 h-1/2 text-graybg flex flex-wrap items-center justify-center content-center ">
-            {/* //варианты ответов 
-            {selectedQuestion &&
-              selectedQuestion.options.all.map((country) => (
-                <>
-                  <AnswerButton
-                    className="button"
-                    onClick={handleAnswerClick(country)}
-                    isClicked={selectedCountry === country}
-                    disabled={answerDone}
-                  >
-                    {country}
-                  </AnswerButton>
-                </>
-              ))}
-          </div> */}
         </div>
       </div>
     </main>
