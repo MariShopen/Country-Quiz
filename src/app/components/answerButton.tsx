@@ -1,10 +1,7 @@
-import React, { useState } from "react";
-export type ButtonProps = {
-  className?: string;
-  children: React.ReactNode;
-  isClicked: boolean;
-  disabled?: boolean;
-  onClick?: () => void;
+import React, { ComponentProps, useState } from "react";
+
+export type ButtonProps = ComponentProps<"button"> & {
+  isClicked?: boolean;
 };
 
 export default function AnswerButton({

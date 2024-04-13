@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./globals.css";
 import AnswerButton from "./components/answerButton";
+import QuestionComponent from "@/oneQuestion";
 
 type Options = {
   correct: any;
@@ -133,8 +134,16 @@ export default function Home() {
                 ))}
             </div>
           </div>
-          <div className="selected-question mt-4">
-            {/* //вопросы открываются по клику */}
+          {selectedQuestion && (
+            <QuestionComponent
+              key={selectedQuestion.question}
+              question={selectedQuestion.question}
+              options={selectedQuestion.options}
+            />
+          )}
+
+          {/* <div className="selected-question mt-4">
+            {/* //вопросы открываются по клику 
             {selectedQuestion && (
               <div className="text-graybg text-2xl font-semibold">
                 {selectedQuestion.question}
@@ -142,7 +151,7 @@ export default function Home() {
             )}
           </div>
           <div className="answers w-2/3 h-1/2 text-graybg flex flex-wrap items-center justify-center content-center ">
-            {/* //варианты ответов */}
+            {/* //варианты ответов 
             {selectedQuestion &&
               selectedQuestion.options.all.map((country) => (
                 <>
@@ -156,7 +165,7 @@ export default function Home() {
                   </AnswerButton>
                 </>
               ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </main>
