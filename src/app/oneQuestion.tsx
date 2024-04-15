@@ -46,6 +46,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
               onClick={handleAnswerClick(country)}
               isClicked={selectedCountry === country}
               disabled={answerDone}
+              rightAnswer={options.correct}
             >
               {country}
             </AnswerButton>

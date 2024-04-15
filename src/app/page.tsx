@@ -46,18 +46,9 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
-    undefined
-  );
-  const [answerDone, setAnswerDone] = useState<boolean>(false);
 
   const handleQuestionClick = (question: any) => {
     setQuestion(question);
-  };
-
-  const handleAnswerClick = (country: string) => () => {
-    setSelectedCountry(country);
-    setAnswerDone(true);
   };
 
   useEffect(() => {
