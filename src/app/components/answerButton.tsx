@@ -6,7 +6,8 @@ import WrongIcon from "../../../public/img/Close_round_fill.svg";
 export type ButtonProps = ComponentProps<"button"> & {
   isClicked?: boolean;
   icon?: string;
-  rightAnswer: string;
+  isCorrect: boolean;
+  disabled: boolean;
 };
 
 export default function AnswerButton({
@@ -16,7 +17,7 @@ export default function AnswerButton({
   isClicked,
   disabled,
   icon,
-  rightAnswer,
+  isCorrect,
   ...rest
 }: ButtonProps) {
   return (
@@ -30,7 +31,7 @@ export default function AnswerButton({
       {...rest}
     >
       {children}
-      {isClicked && rightAnswer === children && (
+      {isClicked && isCorrect && (
         <Image
           className="ml-2"
           src={RightIcon}
@@ -39,10 +40,19 @@ export default function AnswerButton({
           height={20}
         />
       )}
-      {isClicked && rightAnswer !== children && (
+      {isClicked && !isCorrect && (
         <Image
           className="ml-2"
           src={WrongIcon}
+          alt="Icon"
+          width={20}
+          height={20}
+        />
+      )}
+      {!isClicked && isCorrect && disabled && (
+        <Image
+          className="ml-2"
+          src={RightIcon}
           alt="Icon"
           width={20}
           height={20}
