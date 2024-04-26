@@ -4,9 +4,10 @@ import "./globals.css";
 import QuestionComponent from "./oneQuestion";
 
 type Options = {
-  correct: any;
+  correct: string;
   incorrect: any[];
   all: any[];
+  answered: string | undefined;
 };
 
 type Question = {
@@ -51,6 +52,10 @@ export default function Home() {
     setQuestion(question);
   };
 
+  const handleUserAnswer = (answer: any) => {
+    selectedQuestion ? (selectedQuestion.options.answered = answer) : undefined;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,6 +85,7 @@ export default function Home() {
               correct: correctAnswer,
               incorrect: incorrectAnswers,
               all: allAnswers,
+              answered: undefined,
             };
 
             return { question, options };
@@ -129,6 +135,7 @@ export default function Home() {
               key={selectedQuestion.question}
               question={selectedQuestion.question}
               options={selectedQuestion.options}
+              handleUserAnswer={handleUserAnswer}
             />
           ) : (
             <div className="h-3/4"></div>

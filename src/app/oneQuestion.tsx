@@ -5,16 +5,19 @@ type Options = {
   correct: any;
   incorrect: any[];
   all: any[];
+  answered: any;
 };
 
 type QuestionComponentProps = {
   question: string;
   options: Options;
+  handleUserAnswer: (answer: any) => void;
 };
 
 const QuestionComponent: React.FC<QuestionComponentProps> = ({
   question,
   options,
+  handleUserAnswer,
 }) => {
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
     undefined
@@ -24,6 +27,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   const handleAnswerClick = (country: string) => () => {
     setSelectedCountry(country);
     setAnswerDone(true);
+    handleUserAnswer(country);
   };
 
   return (
@@ -52,6 +56,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
             </AnswerButton>
           ))}
       </div>
+      <div className="answered bg-red">{options.answered}</div>
     </div>
   );
 };
