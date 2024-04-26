@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import "./globals.css";
 import QuestionComponent from "./oneQuestion";
 
-type Options = {
+export type Options = {
   correct: string;
   incorrect: any[];
   all: any[];
   answered: string | undefined;
+  disabled: boolean;
 };
 
 type Question = {
@@ -54,6 +55,7 @@ export default function Home() {
 
   const handleUserAnswer = (answer: any) => {
     selectedQuestion ? (selectedQuestion.options.answered = answer) : undefined;
+    selectedQuestion ? (selectedQuestion.options.disabled = true) : false;
   };
 
   useEffect(() => {
@@ -86,6 +88,7 @@ export default function Home() {
               incorrect: incorrectAnswers,
               all: allAnswers,
               answered: undefined,
+              disabled: false,
             };
 
             return { question, options };
@@ -133,6 +136,7 @@ export default function Home() {
           {selectedQuestion ? (
             <QuestionComponent
               key={selectedQuestion.question}
+              answered={selectedQuestion?.options.answered != undefined}
               question={selectedQuestion.question}
               options={selectedQuestion.options}
               handleUserAnswer={handleUserAnswer}

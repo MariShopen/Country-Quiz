@@ -1,22 +1,18 @@
 import React, { useState } from "react";
 import AnswerButton from "./components/answerButton";
-
-type Options = {
-  correct: any;
-  incorrect: any[];
-  all: any[];
-  answered: any;
-};
+import { Options } from "./page";
 
 type QuestionComponentProps = {
   question: string;
   options: Options;
+  answered: boolean;
   handleUserAnswer: (answer: any) => void;
 };
 
 const QuestionComponent: React.FC<QuestionComponentProps> = ({
   question,
   options,
+  answered,
   handleUserAnswer,
 }) => {
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
@@ -49,14 +45,15 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
               className="button"
               onClick={handleAnswerClick(country)}
               isClicked={selectedCountry === country}
-              disabled={answerDone}
+              disabled={options.disabled}
               isCorrect={options.correct === country}
+              isAnswered={answered}
+              isUserAnswerCorrect={options.answered === country}
             >
               {country}
             </AnswerButton>
           ))}
       </div>
-      <div className="answered bg-red">{options.answered}</div>
     </div>
   );
 };
