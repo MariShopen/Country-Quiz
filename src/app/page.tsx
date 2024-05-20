@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./globals.css";
 import QuestionComponent from "./oneQuestion";
+import Congrats from "./components/congrats";
 
 export type Options = {
   correct: string;
@@ -9,6 +10,7 @@ export type Options = {
   all: any[];
   answered: string | undefined;
   disabled: boolean;
+  totalAnswered: number;
 };
 
 type Question = {
@@ -89,6 +91,7 @@ export default function Home() {
               all: allAnswers,
               answered: undefined,
               disabled: false,
+              totalAnswered: 10,
             };
 
             return { question, options };
@@ -108,43 +111,47 @@ export default function Home() {
   return (
     <main className="flex min-w-full min-h-full h-screen items-center justify-center bg-graybg ">
       <div className="flex items-center justify-center w-[1280px] h-[720px] bg-bg-image">
-        <div className="flex items-center justify-around flex-col w-2/3 h-2/3 bg-purple2 rounded-xl">
-          <div className="flex flex-col items-center">
-            <div className="text-fontColor font-bold mt-10">Country Quiz</div>
-            <div className="question-buttons flex flex-row justify-center">
-              {/* //кнопки рисуются disabled, пока вопросы не загрузились */}
-              {Array.from({ length: 10 })
-                .fill(undefined)
-                .map((_, i) => (
-                  <>
-                    {isLoading ? (
-                      <button className=" disabled:opacity-50 w-12 h-12 rounded-full text-fontColor bg-purple3 m-2 text-xl font-semibold">
-                        {i + 1}
-                      </button>
-                    ) : (
-                      <button
-                        className="w-12 h-12 rounded-full text-graybg bg-purple3 hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2 m-2 text-xl font-semibold"
-                        onClick={() => handleQuestionClick(quizQuestions[i])}
-                      >
-                        {i + 1}
-                      </button>
-                    )}
-                  </>
-                ))}
+        {selectedQuestion?.options.totalAnswered === 10 ? (
+          <div className="flex items-center justify-around flex-col w-2/3 h-2/3 bg-purple2 rounded-xl">
+            <div className="flex flex-col items-center">
+              <div className="text-fontColor font-bold mt-10">Country Quiz</div>
+              <div className="question-buttons flex flex-row justify-center">
+                {/* //кнопки рисуются disabled, пока вопросы не загрузились */}
+                {Array.from({ length: 10 })
+                  .fill(undefined)
+                  .map((_, i) => (
+                    <>
+                      {isLoading ? (
+                        <button className=" disabled:opacity-50 w-12 h-12 rounded-full text-fontColor bg-purple3 m-2 text-xl font-semibold">
+                          {i + 1}
+                        </button>
+                      ) : (
+                        <button
+                          className="w-12 h-12 rounded-full text-graybg bg-purple3 hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2 m-2 text-xl font-semibold"
+                          onClick={() => handleQuestionClick(quizQuestions[i])}
+                        >
+                          {i + 1}
+                        </button>
+                      )}
+                    </>
+                  ))}
+              </div>
             </div>
+            {selectedQuestion ? (
+              <QuestionComponent
+                key={selectedQuestion.question}
+                answered={selectedQuestion?.options.answered != undefined}
+                question={selectedQuestion.question}
+                options={selectedQuestion.options}
+                handleUserAnswer={handleUserAnswer}
+              />
+            ) : (
+              <div className="h-3/4"></div>
+            )}
           </div>
-          {selectedQuestion ? (
-            <QuestionComponent
-              key={selectedQuestion.question}
-              answered={selectedQuestion?.options.answered != undefined}
-              question={selectedQuestion.question}
-              options={selectedQuestion.options}
-              handleUserAnswer={handleUserAnswer}
-            />
-          ) : (
-            <div className="h-3/4"></div>
-          )}
-        </div>
+        ) : (
+          <Congrats totalAnswered={10} />
+        )}
       </div>
     </main>
   );
