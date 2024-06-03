@@ -3,10 +3,12 @@ import Image from "next/image"; // Import Next.js Image component
 import CongratsIcon from "./img/congrats.svg";
 
 export type CongratsProps = {
-  totalAnswered: number;
+  correctAnswered: number;
 };
 
-const Congrats: React.FC<CongratsProps> = ({ totalAnswered }) => {
+const Congrats: React.FC<CongratsProps> = ({
+  correctAnswered: totalAnswered,
+}) => {
   return (
     <div className="flex justify-around flex-col w-[400px] h-[400px] bg-purple2 rounded-xl">
       <div className="flex flex-col items-center">

@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import "./globals.css";
 import QuestionComponent from "./oneQuestion";
 import Congrats from "./components/congrats";
+import QuestionButton from "./components/questionButton";
 
 export type Options = {
   correct: string;
@@ -10,13 +11,15 @@ export type Options = {
   all: any[];
   answered: string | undefined;
   disabled: boolean;
-  totalAnswered: number;
 };
 
 type Question = {
   question: string;
   options: Options;
 };
+
+let totalAnswered: number = 0;
+let totalCorrectAnswered: number = 0;
 
 // function of random shuffle countries
 const shuffle = (array: any[]) => {
@@ -50,14 +53,25 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
+  // const [_hui, trigger] = useReducer((i) => i + 1, 0);
 
   const handleQuestionClick = (question: any) => {
     setQuestion(question);
   };
 
+  let isCompleted =
+    quizQuestions.filter((question) => question.options.answered != null)
+      .length == 10;
+
   const handleUserAnswer = (answer: any) => {
     selectedQuestion ? (selectedQuestion.options.answered = answer) : undefined;
     selectedQuestion ? (selectedQuestion.options.disabled = true) : false;
+    if (selectedQuestion?.options.disabled === true) totalAnswered += 1;
+    if (
+      selectedQuestion?.options.answered === selectedQuestion?.options.correct
+    )
+      totalCorrectAnswered += 1;
+    // trigger();
   };
 
   useEffect(() => {
@@ -91,7 +105,6 @@ export default function Home() {
               all: allAnswers,
               answered: undefined,
               disabled: false,
-              totalAnswered: 10,
             };
 
             return { question, options };
@@ -111,7 +124,7 @@ export default function Home() {
   return (
     <main className="flex min-w-full min-h-full h-screen items-center justify-center bg-graybg ">
       <div className="flex items-center justify-center w-[1280px] h-[720px] bg-bg-image">
-        {selectedQuestion?.options.totalAnswered === 10 ? (
+        {totalAnswered !== 10 ? (
           <div className="flex items-center justify-around flex-col w-2/3 h-2/3 bg-purple2 rounded-xl">
             <div className="flex flex-col items-center">
               <div className="text-fontColor font-bold mt-10">Country Quiz</div>
@@ -126,12 +139,29 @@ export default function Home() {
                           {i + 1}
                         </button>
                       ) : (
-                        <button
-                          className="w-12 h-12 rounded-full text-graybg bg-purple3 hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2 m-2 text-xl font-semibold"
+                        <QuestionButton
+                          key={selectedQuestion?.question}
+                          isActive={
+                            selectedQuestion === quizQuestions[i] ||
+                            quizQuestions[i]?.options.answered != undefined
+                          }
+                          disabled={selectedQuestion?.options.disabled || false}
                           onClick={() => handleQuestionClick(quizQuestions[i])}
                         >
                           {i + 1}
-                        </button>
+                        </QuestionButton>
+                        // <button
+                        //   className={`w-12 h-12 rounded-full text-graybg m-2 text-xl font-semibold
+                        //   hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2
+                        //   ${
+                        //     selectedQuestion?.options.disabled
+                        //       ? "bg-gradient-to-r from-gradientColor1 to-gradientColor2"
+                        //       : "bg-purple3"
+                        //   }`}
+                        //   onClick={() => handleQuestionClick(quizQuestions[i])}
+                        // >
+                        //   {i + 1}
+                        // </button>
                       )}
                     </>
                   ))}
@@ -150,7 +180,7 @@ export default function Home() {
             )}
           </div>
         ) : (
-          <Congrats totalAnswered={10} />
+          <Congrats correctAnswered={totalCorrectAnswered} />
         )}
       </div>
     </main>
