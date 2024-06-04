@@ -5,14 +5,12 @@ import { Options } from "./page";
 type QuestionComponentProps = {
   question: string;
   options: Options;
-  answered: boolean;
   handleUserAnswer: (answer: any) => void;
 };
 
 const QuestionComponent: React.FC<QuestionComponentProps> = ({
   question,
   options,
-  answered,
   handleUserAnswer,
 }) => {
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
@@ -47,7 +45,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
               isClicked={selectedCountry === country}
               disabled={options.disabled}
               isCorrect={options.correct === country}
-              isAnswered={answered}
+              isAnswered={options.answered != null}
               isUserAnswerCorrect={options.answered === country}
             >
               {country}

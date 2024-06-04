@@ -3,6 +3,38 @@ import Image from "next/image"; // Import Next.js Image component
 import RightIcon from "./img/Check_round_fill.svg";
 import WrongIcon from "../../../public/img/Close_round_fill.svg";
 
+const Icon = ({ isClicked, isCorrect, isAnswered }: any) => {
+  if (!isAnswered) {
+    return null;
+  }
+
+  if (isCorrect) {
+    return (
+      <Image
+        className="ml-2"
+        src={RightIcon}
+        alt="Icon"
+        width={20}
+        height={20}
+      />
+    );
+  }
+
+  if (isClicked) {
+    return (
+      <Image
+        className="ml-2"
+        src={WrongIcon}
+        alt="Icon"
+        width={20}
+        height={20}
+      />
+    );
+  }
+
+  return null;
+};
+
 export type ButtonProps = ComponentProps<"button"> & {
   isClicked?: boolean;
   icon?: string;
@@ -35,51 +67,11 @@ export default function AnswerButton({
       {...rest}
     >
       {children}
-      {isClicked && isCorrect && (
-        <Image
-          className="ml-2"
-          src={RightIcon}
-          alt="Icon"
-          width={20}
-          height={20}
-        />
-      )}
-      {isClicked && !isCorrect && (
-        <Image
-          className="ml-2"
-          src={WrongIcon}
-          alt="Icon"
-          width={20}
-          height={20}
-        />
-      )}
-      {(!isClicked && isCorrect && disabled && (
-        <Image
-          className="ml-2"
-          src={RightIcon}
-          alt="Icon"
-          width={20}
-          height={20}
-        />
-      )) ||
-        (isAnswered && isCorrect && (
-          <Image
-            className="ml-2"
-            src={RightIcon}
-            alt="Icon"
-            width={20}
-            height={20}
-          />
-        ))}
-      {isAnswered && isUserAnswerCorrect && !isCorrect && (
-        <Image
-          className="ml-2"
-          src={WrongIcon}
-          alt="Icon"
-          width={20}
-          height={20}
-        />
-      )}
+      <Icon
+        isClicked={isClicked}
+        isCorrect={isCorrect}
+        isAnswered={isAnswered}
+      />
     </button>
   );
 }

@@ -1,13 +1,13 @@
 import React, { ComponentProps } from "react";
 
 export type QButtonProps = ComponentProps<"button"> & {
-  disabled: boolean;
+  // disabled: boolean;
   isActive: boolean;
 };
 
 export default function QuestionButton({
   className,
-  disabled,
+  // disabled,
   onClick,
   isActive,
   children,
@@ -20,7 +20,7 @@ export default function QuestionButton({
         ${isActive ? "bg-gradient-to-r from-gradientColor1 to-gradientColor2" : "bg-purple3"}
 `}
       onClick={onClick}
-      disabled={disabled}
+      // disabled={disabled}
       {...rest}
     >
       {children}
