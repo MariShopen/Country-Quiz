@@ -4,10 +4,12 @@ import CongratsIcon from "./img/congrats.svg";
 
 export type CongratsProps = {
   correctAnswered: number;
+  onRestart?: () => unknown;
 };
 
 const Congrats: React.FC<CongratsProps> = ({
   correctAnswered: totalAnswered,
+  onRestart,
 }) => {
   return (
     <div className="flex justify-around flex-col w-[400px] h-[400px] bg-purple2 rounded-xl">
@@ -26,6 +28,7 @@ const Congrats: React.FC<CongratsProps> = ({
         <button
           className="bg-gradient-to-r from-gradientColor1 to-gradientColor2 text-graybg 
       text-xl font-semibold w-60 h-16 m-5 rounded-xl flex flex-row justify-center items-center"
+          onClick={onRestart}
         >
           Play again
         </button>

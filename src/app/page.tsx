@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useReducer, useState } from "react";
 import "./globals.css";
-import QuestionComponent from "./oneQuestion";
+import QuestionComponent from "./QuestionComponent";
 import Congrats from "./components/congrats";
 import QuestionButton from "./components/questionButton";
 import { countries } from "./countries";
@@ -18,8 +18,6 @@ type Question = {
   question: string;
   options: Options;
 };
-
-let totalCorrectAnswered: number = 0;
 
 // function of random shuffle countries
 const shuffle = <T extends unknown[]>(array: T): T => {
@@ -48,55 +46,112 @@ const generateIncorrectAnswers = (
   return incorrectAnswers;
 };
 
+const fetchData = async () => {
+  try {
+    const response = await fetch(
+      "https://restcountries.com/v3.1/independent?status=true&fields=name,capital"
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const jsonData = await response.json();
+    const countryNames = jsonData.map((country: any) => country.name.common);
+    const selectedquestions = shuffle(jsonData);
+    const generatedQuizQuestions = selectedquestions
+      .slice(0, 10)
+      .map((country: any) => {
+        const correctAnswer = country.name.common;
+        const incorrectAnswers = generateIncorrectAnswers(
+          countryNames,
+          correctAnswer
+        );
+        const allAnswers = shuffle([correctAnswer, ...incorrectAnswers]);
+
+        const question = `In which country is ${country.capital} the capital?`;
+        const options: Options = {
+          correct: correctAnswer,
+          incorrect: incorrectAnswers,
+          all: allAnswers,
+          answered: undefined,
+          disabled: false,
+        };
+
+        return { question, options };
+      });
+    return generatedQuizQuestions;
+  } catch (error) {
+    alert("Произошла ошибка");
+  }
+};
+
 export default function Home() {
-  const [selectedQuestion, setQuestion] = useState<Question | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
-  const [tr, trigger] = useReducer((i) => i + 1, 0);
+  const [questionId, setQuestionId] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
 
-  // const markCompleted = (question: any) => {
-  //   let newQuestions = (question: any) =>
-  //     quizQuestions.map((item) =>
-  //       item === question ? { ...item, completed: true } : item
-  //     );
+  const selectedQuestion = quizQuestions[questionId];
 
-  //   setQuizQuestions(newQuestions);
-  // };
-
-  // markCompleted(quizQuestions[2]);
-
-  const handleQuestionClick = (question: any) => {
-    setQuestion(question);
+  const handleQuestionClick = (question: number) => {
+    setQuestionId(question);
   };
 
   let isCompleted =
     quizQuestions.filter((question) => question.options.answered != null)
       .length == 10;
 
+  let correctAnswered = quizQuestions.filter(
+    (question) => question.options.answered === question.options.correct
+  ).length;
+
   const handleUserAnswer = (answer: any) => {
-    selectedQuestion ? (selectedQuestion.options.answered = answer) : undefined;
-    selectedQuestion ? (selectedQuestion.options.disabled = true) : false;
-    // if (selectedQuestion?.options.disabled === true) totalAnswered += 1;
-    if (
-      selectedQuestion?.options.answered === selectedQuestion?.options.correct
-    )
-      totalCorrectAnswered += 1;
-    trigger();
+    const newQuizQuestions = quizQuestions.map((question, id) => {
+      if (id === questionId) {
+        return {
+          ...question,
+          options: {
+            ...question.options,
+            answered: answer,
+            disabled: true,
+          },
+        };
+      }
+      return question;
+    });
+    setQuizQuestions(newQuizQuestions);
+  };
+
+  const handleRestart = async () => {
+    let questions = await fetchData();
+    setQuizQuestions(questions);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const jsonData = countries;
-        const countryNames = jsonData.map((country) => country.name);
+        // if api is working
+        const response = await fetch(
+          "https://restcountries.com/v3.1/independent?status=true&fields=name,capital"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const jsonData = await response.json();
+        const countryNames = jsonData.map(
+          (country: any) => country.name.common
+        );
+
+        //if api doesn't work
+        // const jsonData = countries;
+        // const countryNames = jsonData.map((country) => country.name);
+
         // const shuffledCapitals = shuffle(capitals);
 
         const selectedquestions = shuffle(jsonData);
         const generatedQuizQuestions = selectedquestions
           .slice(0, 10)
-          .map((country) => {
-            const correctAnswer = country.name;
+          .map((country: any) => {
+            const correctAnswer = country.name.common;
             const incorrectAnswers = generateIncorrectAnswers(
               countryNames,
               correctAnswer
@@ -116,8 +171,6 @@ export default function Home() {
           });
 
         setQuizQuestions(generatedQuizQuestions);
-      } catch (error: any) {
-        setError(error);
       } finally {
         setIsLoading(false);
       }
@@ -145,34 +198,22 @@ export default function Home() {
                         </button>
                       ) : (
                         <QuestionButton
-                          key={selectedQuestion?.question}
+                          key={selectedQuestion.question}
                           isActive={
-                            selectedQuestion === quizQuestions[i] ||
+                            questionId === i ||
                             quizQuestions[i]?.options.answered != undefined
                           }
                           // disabled={selectedQuestion?.options.disabled || false}
-                          onClick={() => handleQuestionClick(quizQuestions[i])}
+                          onClick={() => handleQuestionClick(i)}
                         >
                           {i + 1}
                         </QuestionButton>
-                        // <button
-                        //   className={`w-12 h-12 rounded-full text-graybg m-2 text-xl font-semibold
-                        //   hover:bg-gradient-to-r from-gradientColor1 to-gradientColor2
-                        //   ${
-                        //     selectedQuestion?.options.disabled
-                        //       ? "bg-gradient-to-r from-gradientColor1 to-gradientColor2"
-                        //       : "bg-purple3"
-                        //   }`}
-                        //   onClick={() => handleQuestionClick(quizQuestions[i])}
-                        // >
-                        //   {i + 1}
-                        // </button>
                       )}
                     </>
                   ))}
               </div>
             </div>
-            {selectedQuestion ? (
+            {selectedQuestion != null ? (
               <QuestionComponent
                 key={selectedQuestion.question}
                 question={selectedQuestion.question}
@@ -184,7 +225,10 @@ export default function Home() {
             )}
           </div>
         ) : (
-          <Congrats correctAnswered={totalCorrectAnswered} />
+          <Congrats
+            correctAnswered={correctAnswered}
+            onRestart={handleRestart}
+          />
         )}
       </div>
     </main>
