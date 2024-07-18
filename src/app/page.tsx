@@ -124,6 +124,7 @@ export default function Home() {
     let questions = await fetchData();
     setQuizQuestions(questions);
     setIsLoading(false);
+    setQuestionId(0);
   };
 
   useEffect(() => {
